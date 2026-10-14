@@ -1,6 +1,6 @@
 # SME Economic Graph
 
-Propuesta para el reto de AI Engineering de Totalplay: cómo construir un Economic Graph de PyMEs y cómo demostrar que genera valor incremental.
+Propuesta para el reto de AI Engineering: cómo construir un Economic Graph de PyMEs y cómo demostrar que genera valor incremental.
 
 Autor: Pablo Benítez.
 
@@ -8,7 +8,7 @@ Autor: Pablo Benítez.
 
 Una página web de un solo archivo (`index.html`) que explica la propuesta de punta a punta: qué problema se ataca primero, cómo se arma el grafo, qué modelo se usa, cómo se prueba el valor y cómo se ve todo junto en una Control Tower.
 
-Los datos son simulados. Ninguna cifra es de Totalplay ni es real; son coherentes entre sí para poder seguir la cadena completa del grafo al dinero.
+Los datos son simulados. Ninguna cifra es real; son coherentes entre sí para poder seguir la cadena completa del grafo al dinero.
 
 ## Cómo verla
 
@@ -20,7 +20,7 @@ Las tipografías (Caveat y Source Sans 3) se cargan desde Google Fonts. Sin inte
 
 La página tiene seis secciones, una por cada entregable del reto:
 
-1. Por dónde empiezo: el caso de uso inicial, vender mejor a PyMEs conectadas con clientes de Totalplay, y por qué se escoge ese.
+1. Por dónde empiezo: el caso de uso inicial, vender mejor a PyMEs conectadas con clientes, y por qué se escoge ese.
 2. Datos y grafo: nodos (PyMEs, industrias, zonas, servicios), relaciones, y para cada relación su fuente, su fecha y su nivel de confianza. Se separa lo observado de lo inferido.
 3. Enfoque de IA/ML: baseline sin grafo, features de grafo, embeddings y GNN, con una tabla de ablación y la decisión de qué se queda y qué no.
 4. Arquitectura: primero tablas en el lakehouse; una base de grafos solo si las consultas lo piden.
@@ -66,7 +66,6 @@ Decisión: se queda C. La GNN no mejora y cuesta el triple.
 
 - Los datos son inventados. La página sirve para mostrar el razonamiento y la forma de medir, no para tomar decisiones de negocio.
 - Crédito y riesgo quedan fuera de esta propuesta hasta tener controles específicos.
-- Un piloto real necesitaría validar con datos de Totalplay la cobertura del grafo, la calidad de la resolución de entidades y la frescura de las relaciones antes de confiar en cualquier lift.
 
 ## Archivos
 
