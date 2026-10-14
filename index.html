@@ -1,0 +1,574 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>SME Economic Graph</title>
+<meta name="Propuesta de datos Totalplay AI engineer" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Source+Sans+3:wght@400;600;700;800&display=swap">
+<style>
+:root{
+  --bg:#1E1E28; --surface:#272735; --surface2:#303042; --ink:#F2F2F2; --muted:#AAB0BD; --line:#3B4559;
+  --accent:#4FABD6; --accent-soft:rgba(79,171,214,.16); --accent-ink:#1E1E28; --hl:rgba(244,176,0,.8); --sticky:#F2E548; --sticky-ink:#1E1E28;
+  --internet:#B7D027; --tv:#4FABD6; --phone:#7D54AA; --pink:#D94389; --amber:#F4B000;
+  --good:#B7D027; --warn:#F4B000; --bad:#DB4437; --bad-text:#F2796D;
+  --good-soft:rgba(183,208,39,.14); --warn-soft:rgba(244,176,0,.15); --bad-soft:rgba(219,68,55,.2);
+  --f-body:'Source Sans 3','Segoe UI',Helvetica,Arial,sans-serif;
+  --f-hand:'Caveat','Segoe Print','Comic Sans MS',cursive;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--f-body);
+  padding-block:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-body);text-wrap:balance;margin:0;line-height:1.15;font-weight:800;letter-spacing:-.015em}
+p{margin:0}
+.hand{font-family:var(--f-hand);font-weight:500}
+.page{max-width:1040px;margin:0 auto;padding-block:0 72px}
+.topnav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:6px 22px;flex-wrap:nowrap;overflow-x:auto;padding:12px 0;border-bottom:1.5px dashed var(--line);margin-bottom:36px}
+.topnav a{font:500 22px/1 var(--f-hand);color:var(--muted);text-decoration:none;white-space:nowrap;padding:4px 2px;border-bottom:2px solid transparent}
+.topnav a:hover,.topnav a:focus-visible{color:var(--ink);border-bottom-color:var(--accent);outline:none}
+.topnav a b{color:var(--accent);font-weight:700}
+main{display:flex;flex-direction:column;gap:68px;min-width:0}
+section{min-width:0;scroll-margin-top:70px}
+.eyebrow{font:500 25px/1 var(--f-hand);color:var(--accent);margin-bottom:6px}
+h2{font-size:clamp(28px,4vw,38px);margin-bottom:12px}
+h3{font-size:19px;margin-bottom:6px;font-weight:700}
+.lead{font-size:19px;max-width:62ch}
+.muted{color:var(--muted)}
+.small{font-size:14.5px}
+.num{font-variant-numeric:tabular-nums}
+mark{background:linear-gradient(transparent 72%,var(--hl) 72%);color:inherit;padding:0 2px}
+
+.hero{padding-top:6px}
+.hero h1{font-size:clamp(40px,8vw,76px);letter-spacing:-.035em;display:inline-block;position:relative;margin-bottom:22px;padding-bottom:10px}
+.squig{position:absolute;left:0;bottom:-2px;width:100%;height:14px;overflow:visible}
+.squig path{fill:none;stroke:url(#sq);stroke-width:4;stroke-linecap:round}
+.hero .lead{font-size:clamp(19px,2.4vw,23px);max-width:44ch;margin-bottom:22px}
+.chain{font:500 26px/1.3 var(--f-hand);color:var(--ink);margin-bottom:26px;display:flex;flex-wrap:wrap;gap:2px 10px}
+.chain i{font-style:normal;color:var(--accent)}
+.chain b{font-weight:700;background:linear-gradient(transparent 70%,var(--hl) 70%)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:18px 28px;margin-bottom:26px}
+.kpi{min-width:0;border-top:4px solid var(--internet);padding-top:10px}
+.kpi:nth-child(2){border-top-color:var(--tv)}.kpi:nth-child(3){border-top-color:var(--phone)}.kpi:nth-child(4){border-top-color:var(--amber)}
+.kpi .v{font:800 clamp(34px,5vw,46px)/1 var(--f-body);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:15px;color:var(--muted);margin-top:4px;max-width:26ch}
+
+.sticky{background:var(--sticky);color:var(--sticky-ink);padding:16px 20px 18px;max-width:430px;font:500 23px/1.25 var(--f-hand);box-shadow:0 8px 14px -8px rgba(0,0,0,.35),0 1px 0 rgba(0,0,0,.08);transform:rotate(-1.2deg);border-radius:2px}
+.sticky.r{transform:rotate(1.1deg);margin-left:auto}
+.sticky b{font-weight:700}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:18px}
+.card{background:var(--surface);border:1.5px solid var(--line);border-radius:14px 10px 16px 9px;padding:18px 20px;min-width:0}
+.card p+p{margin-top:9px}
+ul.tight{margin:6px 0 0;padding-left:20px}ul.tight li{margin:5px 0}
+.tablewrap{overflow-x:auto;border:1.5px solid var(--line);border-radius:12px 8px 14px 8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:16px;min-width:580px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 15px var(--f-body);color:var(--muted);background:var(--surface2)}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font:600 13.5px var(--f-body);padding:1px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}.tag.bad{background:var(--bad-soft);color:var(--bad-text)}.tag.good{background:var(--good-soft);color:var(--good)}
+
+.fig{background:var(--surface);border:1.5px solid var(--line);border-radius:14px 10px 16px 9px;padding:14px 14px 12px}
+.gsvg{width:100%;height:auto;display:block}
+.gsvg .edge{stroke:var(--ink);stroke-width:2.2;fill:none;stroke-linecap:round}
+.gsvg .edge.inf{stroke:var(--accent);stroke-dasharray:7 6}
+.gsvg .n{fill:var(--surface);stroke:var(--ink);stroke-width:2}
+.gsvg .n.hot{fill:var(--accent);stroke:var(--accent)}
+.gsvg .n.cl{fill:#2D3C4F;stroke:var(--accent)}
+.gsvg .n.svc{fill:#3E4233;stroke:var(--internet)}
+.gsvg .n.ring{stroke:var(--internet);stroke-width:3.2}
+.gsvg .n.dim{fill:var(--surface2);stroke:var(--muted)}
+.gsvg .t{fill:var(--ink);font:700 14px var(--f-body);text-anchor:middle}
+.gsvg .t.w{fill:var(--accent-ink)}
+.gsvg .c{fill:var(--muted);font:500 15px var(--f-hand);text-anchor:middle}
+.gsvg .c.w{fill:var(--accent-ink)}
+.gsvg .el{fill:var(--ink);font:500 16px var(--f-hand);text-anchor:middle;paint-order:stroke;stroke:var(--surface);stroke-width:5px;stroke-linejoin:round}
+.legend{display:flex;gap:8px 24px;flex-wrap:wrap;font-size:15px;color:var(--muted);margin-top:8px}
+.legend svg{vertical-align:middle;margin-right:6px}
+
+.arch{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:10px}
+.arch .step{background:var(--surface);border:1.5px solid var(--line);border-radius:10px 14px 9px 13px;padding:13px 14px;font-size:15.5px;min-width:0}
+.arch .step b{display:block;font:700 17px var(--f-body);margin-bottom:3px}
+.arch .step span{color:var(--muted)}
+.band{margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px}
+.band div{background:var(--accent-soft);border-radius:10px;padding:11px 14px;font-size:15.5px}
+.band b{display:block;font:700 16px var(--f-body);color:var(--accent);margin-bottom:2px}
+
+.calc{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 18px;font-size:16px;margin:4px 0 0}
+.calc dt{color:var(--muted)}.calc dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.sens td.pos{background:var(--good-soft)}.sens td.neg{background:var(--bad-soft)}
+
+/* Basis */
+.tower{background:var(--surface);border:1.5px solid var(--accent);border-radius:16px 10px 18px 10px;padding:20px;min-width:0}
+.ctl{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:14px}
+.ctl label{font:500 24px/1 var(--f-hand);color:var(--accent)}
+select{font:600 16px var(--f-body);color:var(--ink);background:var(--surface2);border:1.5px solid var(--line);border-radius:8px;padding:8px 12px;min-height:42px}
+select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.story{background:var(--accent-soft);border-radius:10px 14px 9px 13px;padding:14px 16px;font-size:17px;margin-bottom:18px;min-height:3.4em}
+.story b{font-weight:700}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.panel{border:1.5px solid var(--line);border-radius:12px 9px 13px 9px;padding:14px 16px;min-width:0;background:var(--surface)}
+.panel header{margin-bottom:8px}
+.panel header h3{margin:0;font-size:18px}
+.panel header span{font:500 20px/1 var(--f-hand);color:var(--muted)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;align-items:baseline;margin:10px 0;font-size:15.5px}
+.row .val{font:700 15.5px var(--f-body);font-variant-numeric:tabular-nums;text-align:right}
+.bar{grid-column:1/-1;height:8px;background:var(--surface2);border-radius:5px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:5px}
+.bar i.b2{background:var(--muted);opacity:.6}.bar i.bad{background:var(--bad)}.bar i.good{background:var(--good)}
+.fun{margin:9px 0}
+.fun .top{display:flex;justify-content:space-between;gap:8px;font-size:15.5px}
+.fun .top span{font-weight:700;font-variant-numeric:tabular-nums}
+.fun .rate{font-size:13.5px;color:var(--muted);margin-top:2px}
+.sub{font:500 21px/1 var(--f-hand);color:var(--accent);margin:16px 0 4px}
+.alerts{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.alerts div{font-size:16px;padding:9px 12px;border-radius:8px}
+.alerts .ok{background:var(--good-soft)}.alerts .wr{background:var(--warn-soft)}.alerts .er{background:var(--bad-soft)}
+.mini{width:100%;min-width:0;font-size:15px}
+.mini td,.mini th{padding:5px 6px}
+.compass{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:22px}
+.compass figure{margin:0;padding:2px 0 2px 18px;border-left:4px solid var(--internet)}
+.compass figure:nth-child(2){border-left-color:var(--phone)}
+.compass figcaption{font:500 24px/1 var(--f-hand);color:var(--ink);margin-bottom:6px}
+.compass blockquote{margin:0 0 10px;font-size:16px;line-height:1.5;color:var(--muted);font-style:italic}
+footer{font-size:15px;color:var(--muted);border-top:1.5px dashed var(--line);padding-top:18px;max-width:70ch;margin-top:72px}
+footer .hand{font-size:24px;color:var(--ink)}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .35s ease}}
+</style>
+
+<div class="page">
+<nav class="topnav" aria-label="Secciones">
+  <a href="#s1"><b>1</b> Framing</a>
+  <a href="#s2"><b>2</b> Grafo</a>
+  <a href="#s3"><b>3</b> Modelo</a>
+  <a href="#s4"><b>4</b> Arquitectura</a>
+  <a href="#s5"><b>5</b> Caso económico</a>
+  <a href="#s6"><b>6</b> Control Tower</a>
+</nav>
+
+<main>
+<section class="hero" id="top">
+  <div class="eyebrow">Reto AI Engineer · propuesta de Pablo Benítez para Totalplay</div>
+  <h1>SME Economic Graph<svg class="squig" viewBox="0 0 400 14" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="sq" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#B7D027"/><stop offset=".3" stop-color="#4FABD6"/><stop offset=".6" stop-color="#7D54AA"/><stop offset=".82" stop-color="#D94389"/><stop offset="1" stop-color="#F4B000"/></linearGradient></defs><path d="M2 8 C 40 2, 72 14, 112 7 S 192 2, 232 8 S 322 13, 398 5"/></svg></h1>
+  <p class="lead">Mi plan para Totalplay: empezar por las PyMEs que se parecen o se conectan con clientes que ya tiene, y probar con un experimento que conectarlas mejor deja <mark>más margen que el proceso de hoy</mark>.</p>
+  <div class="chain" aria-label="Cadena de valor"><span>oportunidad</span><i>→</i><span>datos</span><i>→</i><span>grafo</span><i>→</i><span>modelo</span><i>→</i><span>decisión</span><i>→</i><span>acción comercial</span><i>→</i><b>dinero medido</b></div>
+  <div class="kpis" id="heroKpis"></div>
+  <div class="sticky">Nota: todas las cifras son inventadas y no son datos de Totalplay, pero son coherentes entre sí. Parto del funnel del brief (1.2 M, 180 mil, 35 mil, 1,600) para mostrar cómo leería un piloto real.</div>
+</section>
+
+<section id="s1">
+  <div class="eyebrow">entregable 1 · por dónde empezaría yo</div>
+  <h2>Business framing</h2>
+  <p class="lead">Hoy el equipo comercial B2B decide a quién llamar mirando cada PyME por separado. Así se gastan llamadas en cuentas que nunca iban a comprar.</p>
+  <div class="compass" style="margin-top:22px">
+    <figure>
+      <figcaption>misión de Totalplay</figcaption>
+      <blockquote>Conectar a la comunidad a través de servicios innovadores de telecomunicaciones y tecnología para mejorar permanentemente la experiencia de vida de las personas.</blockquote>
+      <p class="small">Mi lectura: no basta con vender conectividad. Quiero que cada PyME quede mejor conectada con sus clientes y proveedores, y por eso cuento también las <mark>conexiones útiles</mark> que genera el grafo.</p>
+    </figure>
+    <figure>
+      <figcaption>visión de Totalplay</figcaption>
+      <blockquote>Ser un ejemplo mundial, reconocidos como el líder en el mercado mexicano en servicios de telecomunicaciones y entretenimiento digital, con base en ser la empresa más innovadora y que exceda las cambiantes expectativas de las personas y las empresas, con sustento en sus valores.</blockquote>
+      <p class="small">Mi lectura: exceder expectativas se prueba con resultados. Por eso el piloto compara contra el proceso de hoy y mide también si el cliente se queda.</p>
+    </figure>
+  </div>
+
+  <div class="grid2" style="margin-top:26px">
+    <div class="card">
+      <h3>Lo que creo</h3>
+      <p>Una PyME compra con más facilidad cuando a su alrededor ya hay clientes de Totalplay: sus proveedores, sus clientes, otras empresas de su zona y su giro.</p>
+      <p>Si eso es cierto, con las mismas llamadas se cierran más ventas.</p>
+    </div>
+    <div class="card">
+      <h3>Por qué empiezo aquí</h3>
+      <ul class="tight">
+        <li>Totalplay ya vende a PyMEs, así que existe un proceso real contra el cual medirme.</li>
+        <li>En semanas se ve en ventas, sin esperar a que otra empresa cambie algo.</li>
+        <li>No toma decisiones automáticas sobre personas ni usa datos sensibles.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tablewrap" style="margin-top:18px">
+    <table>
+      <thead><tr><th>Cuándo</th><th>Qué haría</th><th>Por qué en ese orden</th></tr></thead>
+      <tbody>
+        <tr><td>Primeros 90 días</td><td><b>Adquisición B2B y Next Best Opportunity</b></td><td>Valor directo, medible, y con gobierno de datos sencillo.</td></tr>
+        <tr><td>3 a 9 meses</td><td>Churn y retención, Ecosystem Expansion, comunidades económicas</td><td>Usan el mismo grafo y la retención se mide con el mismo diseño de control.</td></tr>
+        <tr><td>Más adelante</td><td>Market Intelligence. Crédito o riesgo solo con fundamento legal</td><td>Piden explicabilidad y controles propios. Primero el grafo tiene que demostrar calidad.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="s2">
+  <div class="eyebrow">entregable 2 · cómo lo dibujo</div>
+  <h2>Economic Graph</h2>
+  <p class="lead">Un grafo con varios tipos de nodo. De cada relación guardo de dónde salió, cuándo la vi y qué tan segura estoy.</p>
+  <div class="fig" style="margin-top:20px">
+    <svg class="gsvg" viewBox="0 0 680 330" role="img" aria-label="Ejemplo de subgrafo: un proveedor muy conectado con clientes actuales de Totalplay">
+      <defs><filter id="wob" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/></filter></defs>
+      <g filter="url(#wob)">
+        <line class="edge" x1="340" y1="165" x2="340" y2="58"/>
+        <line class="edge" x1="340" y1="165" x2="340" y2="272"/>
+        <line class="edge" x1="340" y1="165" x2="170" y2="230"/>
+        <line class="edge inf" x1="340" y1="165" x2="170" y2="100"/>
+        <line class="edge inf" x1="340" y1="165" x2="510" y2="100"/>
+        <line class="edge inf" x1="340" y1="165" x2="510" y2="230"/>
+        <line class="edge" x1="170" y1="100" x2="60" y2="165"/>
+        <line class="edge" x1="170" y1="230" x2="60" y2="165"/>
+        <line class="edge inf" x1="510" y1="100" x2="604" y2="165"/>
+        <line class="edge inf" x1="510" y1="230" x2="604" y2="165"/>
+        <rect class="n dim" x="270" y="34" width="140" height="46" rx="8"/>
+        <rect class="n dim" x="270" y="250" width="140" height="46" rx="8"/>
+        <circle class="n hot" cx="340" cy="165" r="48"/>
+        <circle class="n ring" cx="170" cy="100" r="38"/><circle class="n ring" cx="170" cy="230" r="38"/>
+        <circle class="n" cx="510" cy="100" r="38"/><circle class="n" cx="510" cy="230" r="38"/>
+        <rect class="n svc" x="2" y="141" width="118" height="48" rx="8"/>
+        <rect class="n cl" x="560" y="141" width="84" height="48" rx="8"/>
+      </g>
+      <text class="el" x="340" y="110">pertenece · 0.99</text>
+      <text class="el" x="340" y="222">opera en · 0.97</text>
+      <text class="el" x="255" y="200">proveedor · 0.95</text>
+      <text class="el" x="255" y="132">proveedor · 0.82</text>
+      <text class="el" x="425" y="132">vende a · 0.71</text>
+      <text class="el" x="425" y="200">se parece · 0.76</text>
+      <text class="t" x="340" y="53">Industria</text><text class="c" x="340" y="71">SCIAN 4311</text>
+      <text class="t" x="340" y="269">Zona</text><text class="c" x="340" y="287">municipio · AGEB</text>
+      <text class="t w" x="340" y="161">PyME B</text><text class="c w" x="340" y="180">Score 87</text>
+      <text class="t" x="170" y="97">PyME A</text><text class="c" x="170" y="115">cliente</text>
+      <text class="t" x="170" y="227">PyME D</text><text class="c" x="170" y="245">cliente</text>
+      <text class="t" x="510" y="97">PyME C</text><text class="c" x="510" y="115">distribuidor</text>
+      <text class="t" x="510" y="227">PyME E</text><text class="c" x="510" y="245">no es cliente</text>
+      <text class="t" x="61" y="162">Servicio</text><text class="c" x="61" y="180" style="fill:var(--internet)">Internet</text>
+      <text class="t" x="602" y="162">Cluster</text><text class="c" x="602" y="180">#17</text>
+    </svg>
+    <div class="legend">
+      <span><svg width="32" height="8"><line x1="0" y1="4" x2="32" y2="4" stroke="currentColor" stroke-width="2.4"/></svg>La vi en un contrato o registro público</span>
+      <span><svg width="32" height="8"><line x1="0" y1="4" x2="32" y2="4" stroke="var(--accent)" stroke-width="2.4" stroke-dasharray="7 6"/></svg>La infiere el modelo, con su confianza</span>
+      <span><svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="none" stroke="var(--internet)" stroke-width="2.6"/></svg>Ya tiene el servicio Internet de Totalplay</span>
+    </div>
+  </div>
+  <div class="sticky r" style="margin-top:22px">Es el ejemplo del brief: la PyME B es proveedora, está muy conectada con clientes actuales y se parece a las que compran. Score 87, y la acción es llamarle primero.</div>
+
+  <div class="tablewrap" style="margin-top:22px">
+    <table>
+      <thead><tr><th>Relación</th><th>Cómo la sé</th><th>De dónde sale</th><th>Qué guardo en la arista</th></tr></thead>
+      <tbody>
+        <tr><td>PyME → industria</td><td><span class="tag good">observada</span></td><td>CRM y DENUE (INEGI)</td><td>código SCIAN, fecha de alta</td></tr>
+        <tr><td>PyME → zona</td><td><span class="tag good">observada</span></td><td>Domicilio geocodificado y cobertura de red</td><td>precisión de la geocodificación</td></tr>
+        <tr><td>PyME → servicio Totalplay</td><td><span class="tag good">observada</span></td><td>Facturación y contratos</td><td>inicio, plan, consumo mensual agregado</td></tr>
+        <tr><td>PyME ↔ PyME proveedor o cliente</td><td><span class="tag warn">inferida</span></td><td>Señales autorizadas, agregadas por empresa</td><td>peso, primera y última vez vista, confianza</td></tr>
+        <tr><td>PyME ↔ PyME se parece</td><td><span class="tag warn">inferida</span></td><td>Similitud entre embeddings</td><td>coseno y versión del modelo</td></tr>
+        <tr><td>PyME → cluster</td><td><span class="tag warn">derivada</span></td><td>Detección de comunidades</td><td>identificador estable entre corridas</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid2" style="margin-top:18px">
+    <div class="card">
+      <h3>Qué va en el nodo y qué en la arista</h3>
+      <p>En el nodo va lo que describe a la empresa: tamaño, antigüedad, giro, productos y consumo agregado.</p>
+      <p>En la arista va lo que describe el vínculo: peso, fuente, primera y última vez vista, confianza y si es observada o inferida. Una arista sin fuente no entra.</p>
+    </div>
+    <div class="card">
+      <h3>Entity resolution, lo que más me preocupa</h3>
+      <p>Normalizo nombre, RFC, teléfono y dirección, genero candidatos por bloques, comparo pares y mando los dudosos a revisión humana.</p>
+      <p>Prefiero no fusionar a fusionar mal, porque una fusión errónea mezcla dos negocios distintos. Se mide con precision y recall de pares sobre una muestra etiquetada.</p>
+    </div>
+    <div class="card">
+      <h3>Cómo se mantiene al día</h3>
+      <p>Cada arista tiene tiempo de validez y tiempo de ingesta. Carga incremental diaria y un snapshot semanal para entrenar sin filtrar información del futuro. Si una señal deja de renovarse, su confianza baja sola.</p>
+    </div>
+    <div class="card">
+      <h3>Privacidad desde el principio</h3>
+      <p>Solo uso señales agregadas por empresa, con finalidad y consentimiento documentados bajo la LFPDPPP. Nada de contenido de comunicaciones ni seguimiento de personas, y los agregados muy pequeños se suprimen. Presentar a dos PyMEs entre sí solo ocurre si ambas lo autorizan.</p>
+    </div>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="eyebrow">entregable 3 · qué modelo y por qué</div>
+  <h2>AI/ML approach</h2>
+  <p class="lead">Empiezo con lo más simple. Cada capa nueva tiene que ganarle a la anterior para quedarse.</p>
+  <div class="tablewrap" style="margin-top:20px">
+    <table>
+      <thead><tr><th>Modelo</th><th class="r">AUC</th><th class="r">Precision@K</th><th class="r">Costo</th><th>Qué decido</th></tr></thead>
+      <tbody>
+        <tr><td>A. Baseline tabular, sin grafo</td><td class="r">0.71</td><td class="r">14.0%</td><td class="r">1×</td><td><span class="tag">punto de partida</span></td></tr>
+        <tr><td>B. A más features de grafo</td><td class="r">0.77</td><td class="r">19.9%</td><td class="r">1.5×</td><td><span class="tag good">me quedo</span></td></tr>
+        <tr><td>C. B más embeddings (node2vec)</td><td class="r">0.78</td><td class="r">20.5%</td><td class="r">2×</td><td><span class="tag good">me quedo</span></td></tr>
+        <tr><td>D. GNN (GraphSAGE)</td><td class="r">0.78</td><td class="r">20.3%</td><td class="r">6×</td><td><span class="tag bad">la dejo fuera</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="small muted" style="margin-top:8px">Cifras simuladas. Entreno con meses anteriores y evalúo en el mes siguiente. K = 10,000 cuentas.</p>
+  <div class="sticky" style="margin-top:18px">La GNN no mejora y cuesta el triple que los embeddings. Me quedo con C.</div>
+  <div class="grid2" style="margin-top:22px">
+    <div class="card">
+      <h3>Qué modelos uso</h3>
+      <ul class="tight">
+        <li><b>Link prediction</b> para completar relaciones proveedor-cliente, con su confianza.</li>
+        <li><b>Detección de comunidades</b> (Leiden) para los clusters económicos y su penetración.</li>
+        <li><b>Opportunity Score</b> con gradient boosting: atributos de la empresa, proporción de vecinos que ya son clientes, centralidad local, penetración del cluster y embeddings.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Del score a la decisión</h3>
+      <p>El score no es lo importante. Lo importante es que cada semana los 8,000 contactos se asignan por score, y que el ejecutivo ve el motivo ("3 de sus clientes ya usan el producto").</p>
+      <p>Calibro la probabilidad para estimar el valor esperado de cada contacto y fijar dónde deja de convenir.</p>
+    </div>
+    <div class="card">
+      <h3>Cómo lo evalúo</h3>
+      <ul class="tight">
+        <li>Offline: Precision@K, recall, lift contra el baseline y calibración.</li>
+        <li>Online: el piloto con control del entregable 5.</li>
+        <li>En producción: drift (PSI), calidad del grafo y estabilidad de los clusters.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Dónde sí entran los LLMs</h3>
+      <p>No en el score. Los usaría para resumirle al ejecutivo por qué se recomienda una cuenta y para limpiar nombres comerciales en la entity resolution, revisando una muestra.</p>
+    </div>
+  </div>
+</section>
+
+<section id="s4">
+  <div class="eyebrow">entregable 4 · cómo se sostiene</div>
+  <h2>Arquitectura</h2>
+  <p class="lead">Primero tablas en el lakehouse. Una base de grafos solo si algún día las consultas la piden.</p>
+  <div class="arch" style="margin-top:20px">
+    <div class="step"><b>Fuentes</b><span>CRM, facturación, consumo agregado, DENUE, firmográficos autorizados</span></div>
+    <div class="step"><b>Ingesta y gobierno</b><span>Contratos de datos, identificadores tokenizados, registro de consentimiento</span></div>
+    <div class="step"><b>Entity resolution</b><span>Bloques, comparación de pares, revisión de la zona gris</span></div>
+    <div class="step"><b>Grafo</b><span>Tablas de nodos y aristas con tiempo, fuente y confianza</span></div>
+    <div class="step"><b>Features y modelos</b><span>Feature store, entrenamiento semanal, registro de modelos</span></div>
+    <div class="step"><b>Activación</b><span>Score semanal al CRM y una API de vecindad bajo demanda</span></div>
+    <div class="step"><b>Control Tower</b><span>Salud del grafo, modelo, funnel e impacto</span></div>
+  </div>
+  <div class="band">
+    <div><b>MLOps</b>Datos y modelos versionados, despliegue en sombra y reentrenamiento cuando hay drift.</div>
+    <div><b>GraphOps</b>Alertas de frescura, aristas por fuente, cambios de esquema y estabilidad de clusters.</div>
+    <div><b>Seguridad y gobierno</b>Acceso por rol, datos sensibles fuera del grafo, bitácora de uso y borrado por solicitud.</div>
+  </div>
+  <div class="grid2" style="margin-top:18px">
+    <div class="card">
+      <h3>Escala y costo</h3>
+      <p>Hablamos de unos 1.2 M de nodos de PyME y decenas de millones de aristas. Eso cabe en Spark con librerías de grafos, sin un clúster de grafos aparte.</p>
+      <p>Evaluaría una base de grafos si aparecen consultas multi-salto en tiempo real o varios equipos explorando el grafo.</p>
+    </div>
+    <div class="card">
+      <h3>Latencia</h3>
+      <p>La venta B2B decide por semana, no por milisegundo. Puntúo por lotes y dejo una API de vecindad para que el ejecutivo vea el contexto al abrir una cuenta.</p>
+    </div>
+  </div>
+</section>
+
+<section id="s5">
+  <div class="eyebrow">entregable 5 · cómo lo demuestro</div>
+  <h2>Caso económico</h2>
+  <p class="lead">Para pasar del grafo al dinero hago un experimento. El grupo de control sigue con el proceso actual y el de tratamiento usa el Opportunity Score.</p>
+  <div class="grid2" style="margin-top:20px">
+    <div class="card">
+      <h3>Cómo diseño el piloto</h3>
+      <ul class="tight">
+        <li>8,000 contactos activados en 90 días, con la misma capacidad comercial en los dos brazos.</li>
+        <li>Asigno al azar por <b>comunidad del grafo</b>, no por PyME. Las PyMEs conectadas se influyen entre sí y una asignación individual contaminaría el control.</li>
+        <li>Métrica principal: conversión a cliente. También miro margen, costo comercial por conversión y retención a 90 días.</li>
+        <li>Fijo el tamaño de muestra antes de empezar y no paro el piloto porque haya salido un buen número.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Cómo calculo el valor incremental</h3>
+      <dl class="calc" id="calc"></dl>
+      <p class="small muted" style="margin-top:10px">LTV de margen = ARPU mensual × margen × vida media. Supuestos simulados: $1,450 de ARPU, 38% de margen, 30 meses.</p>
+    </div>
+  </div>
+  <h3 style="margin-top:26px">Qué tanto cambia el ROI si me equivoco en los supuestos</h3>
+  <div class="tablewrap">
+    <table class="sens" id="sens"></table>
+  </div>
+  <p class="small muted" id="sensNote" style="margin-top:8px"></p>
+  <div class="sticky" style="margin-top:20px">Lo que más cuido es aleatorizar por comunidad. Si asigno por PyME suelto, el control se contamina y el número sale inflado.</div>
+  <div class="card" style="margin-top:22px">
+    <h3>Riesgos y cómo los controlo</h3>
+    <ul class="tight">
+      <li><b>Atribuirle al grafo lo que hizo la campaña.</b> El control recibe el mismo contacto comercial. Solo cambia a quién se llama primero.</li>
+      <li><b>Contaminación entre PyMEs conectadas.</b> Aleatorización por comunidad y errores estándar agrupados.</li>
+      <li><b>Entity resolution deficiente.</b> Reporto la cobertura y mido el lift por nivel de confianza de las aristas.</li>
+      <li><b>Que el efecto se diluya al escalar.</b> El piloto ya muestra menos lift que el offline, así que planeo con el número del piloto.</li>
+      <li><b>Segmentos donde no funciona.</b> Escalo solo donde el intervalo de confianza excluye el cero. En la Control Tower se ve el caso de Construcción.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="s6">
+  <div class="eyebrow">entregable 6 · todo junto en una pantalla</div>
+  <h2>Control Tower</h2>
+  <p class="lead">Una sola cadena: lo que hace el modelo se vuelve una decisión, la decisión una acción comercial y la acción un resultado en pesos. Elige una industria y se recalcula todo.</p>
+  <div class="tower" style="margin-top:20px">
+    <div class="ctl">
+      <label for="seg">Industria</label>
+      <select id="seg"></select>
+      <span class="small muted">Con el mismo esquema se segmenta por geografía, cluster, producto, canal, score y periodo.</span>
+    </div>
+    <div class="story" id="story" aria-live="polite"></div>
+    <div class="tgrid">
+      <div class="panel"><header><h3>1 · Graph Health</h3><span>qué tan bueno es el grafo</span></header><div id="p1"></div></div>
+      <div class="panel"><header><h3>2 · AI Performance</h3><span>qué tan bien predice</span></header><div id="p2"></div></div>
+      <div class="panel"><header><h3>3 · Business Funnel</h3><span>escala logarítmica</span></header><div id="p3"></div></div>
+      <div class="panel"><header><h3>4 · Economic Impact</h3><span>pesos MXN, piloto de 90 días</span></header><div id="p4"></div></div>
+    </div>
+    <div class="alerts" id="alerts"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="hand">Gracias por leer.</div>
+  <p>Autor: Pablo Benítez, propuesta SME Economic Graph. Los datos son simulados y ninguna cifra es real. No tomé en cuenta el crédito y riesgo, quedan fuera hasta tener controles específicos.</p>
+</footer>
+</main>
+</div>
+
+<script>
+(function(){
+  var SEGS=[
+    {n:'Comercio',            uni:520000,det:72000,qual:14000,act:3200,cc:280,tc:340,cov:74,res:90,obs:64,fresh:5,pkb:14.2,pkm:21.0,kc:11,kt:26},
+    {n:'Servicios',           uni:310000,det:52000,qual:10500,act:2400,cc:205,tc:275,cov:81,res:92,obs:60,fresh:6,pkb:14.4,pkm:21.6,kc:7,kt:18},
+    {n:'Manufactura',         uni:160000,det:28000,qual:5500, act:1300,cc:110,tc:150,cov:83,res:94,obs:66,fresh:7,pkb:13.6,pkm:20.0,kc:3,kt:8},
+    {n:'Construcción',        uni:110000,det:16000,qual:3000, act:600, cc:55, tc:55, cov:69,res:86,obs:58,fresh:9,pkb:13.0,pkm:13.6,kc:1,kt:2},
+    {n:'Transporte y logística',uni:100000,det:12000,qual:2000,act:500,cc:50, tc:80, cov:79,res:91,obs:61,fresh:6,pkb:13.8,pkm:23.0,kc:1,kt:3}
+  ];
+  var ARPU=1450, MARGIN=0.38, LIFE=30, PROGRAM=1400000, CONTACT=180;
+  var LTV=ARPU*MARGIN*LIFE, MONTHLY=ARPU*MARGIN;
+
+  function sum(k){return SEGS.reduce(function(a,s){return a+s[k]},0)}
+  function wavg(k,w){var t=sum(w);return SEGS.reduce(function(a,s){return a+s[k]*s[w]},0)/t}
+  function agg(){
+    return {n:'Todas las industrias',uni:sum('uni'),det:sum('det'),qual:sum('qual'),act:sum('act'),cc:sum('cc'),tc:sum('tc'),kc:sum('kc'),kt:sum('kt'),
+      cov:wavg('cov','uni'),res:wavg('res','uni'),obs:wavg('obs','uni'),fresh:wavg('fresh','uni'),pkb:wavg('pkb','qual'),pkm:wavg('pkm','qual')};
+  }
+  function ncdf(x){var t=1/(1+0.2316419*x),d=0.3989423*Math.exp(-x*x/2);
+    var p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return 1-p}
+  function calc(s){
+    var arm=s.act/2, pc=s.cc/arm, pt=s.tc/arm, d=pt-pc, inc=s.tc-s.cc;
+    var se0=Math.sqrt(((s.cc+s.tc)/s.act)*(1-(s.cc+s.tc)/s.act)*(2/arm));
+    var z=se0?d/se0:0;
+    var se=Math.sqrt(pc*(1-pc)/arm+pt*(1-pt)/arm);
+    var cost=PROGRAM*s.act/sum('act');
+    var margin=inc*LTV, net=margin-cost;
+    var p=2*(1-ncdf(Math.abs(z)));
+    return {arm:arm,pc:pc,pt:pt,d:d,inc:inc,z:z,p:p,lo:d-1.96*se,hi:d+1.96*se,cost:cost,margin:margin,net:net,
+      roi:net/cost, payback: inc>0? cost/(inc*MONTHLY):null,
+      cpcC:(arm*CONTACT)/s.cc, cpcT:(arm*CONTACT)/s.tc, lift:s.pkm/s.pkb, kcR:s.kc/arm*1000, ktR:s.kt/arm*1000};
+  }
+
+  var nf=new Intl.NumberFormat('es-MX');
+  function n0(v){return nf.format(Math.round(v))}
+  function pct(v,d){return (v*100).toFixed(d==null?1:d)+'%'}
+  function mxn(v){var a=Math.abs(v),s=v<0?'−':'';
+    if(a>=1e6)return s+'$'+(a/1e6).toFixed(2)+' M'; if(a>=1e3)return s+'$'+Math.round(a/1e3)+' mil'; return s+'$'+Math.round(a)}
+  function mxnFull(v){return (v<0?'−':'')+'$'+nf.format(Math.round(Math.abs(v)))}
+
+  var ALL=agg(), RA=calc(ALL);
+  function kpi(v,l){return '<div class="kpi"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>'}
+  document.getElementById('heroKpis').innerHTML=
+    kpi('+'+(RA.d*100).toFixed(1)+' pp','más conversión en el brazo tratado ('+pct(RA.pc)+' contra '+pct(RA.pt)+')')+
+    kpi('+'+n0(RA.inc),'conversiones que no habrían ocurrido, en 90 días')+
+    kpi(mxn(RA.margin),'de margen incremental a lo largo de la vida del cliente')+
+    kpi(Math.round(RA.roi*100)+'%','de ROI neto sobre un programa de '+mxn(PROGRAM));
+
+  var rows=[
+    ['Diferencia de conversión',pct(RA.pt)+' − '+pct(RA.pc)+' = +'+(RA.d*100).toFixed(1)+' pp'],
+    ['Intervalo de confianza 95%','['+(RA.lo*100).toFixed(1)+', '+(RA.hi*100).toFixed(1)+'] pp (z = '+RA.z.toFixed(1)+')'],
+    ['Conversiones incrementales',n0(ALL.tc)+' − '+n0(ALL.cc)+' = '+n0(RA.inc)],
+    ['Margen incremental',n0(RA.inc)+' × '+mxnFull(LTV)+' = '+mxnFull(RA.margin)],
+    ['Costo del programa',mxnFull(PROGRAM)],
+    ['Neto y ROI',mxnFull(RA.net)+' · '+Math.round(RA.roi*100)+'%'],
+    ['Payback',RA.payback.toFixed(1)+' meses ('+n0(RA.inc)+' × '+mxnFull(MONTHLY)+' al mes)']
+  ];
+  document.getElementById('calc').innerHTML=rows.map(function(r){return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'}).join('');
+
+  (function(){
+    var lives=[18,30,42], ms=[0.30,0.38,0.45], h='<thead><tr><th>Margen \\ vida media</th>';
+    lives.forEach(function(l){h+='<th class="r">'+l+' meses</th>'}); h+='</tr></thead><tbody>';
+    ms.forEach(function(m){h+='<tr><td>'+Math.round(m*100)+'% de margen</td>';
+      lives.forEach(function(l){var r=(RA.inc*ARPU*m*l-PROGRAM)/PROGRAM;
+        h+='<td class="r '+(r>=0?'pos':'neg')+'">'+Math.round(r*100)+'%</td>'});h+='</tr>'});
+    document.getElementById('sens').innerHTML=h+'</tbody>';
+    var low=Math.round((130*LTV-PROGRAM)/PROGRAM*100);
+    document.getElementById('sensNote').textContent=
+      'ROI neto con '+n0(RA.inc)+' conversiones incrementales. Si me quedo en el extremo bajo del intervalo (130 conversiones) con los supuestos base, el ROI sigue siendo '+low+'%.';
+  })();
+
+  /* ---- con-basis ---- */
+  var sel=document.getElementById('seg');
+  sel.innerHTML='<option value="-1">Todas las industrias</option>'+SEGS.map(function(s,i){return '<option value="'+i+'">'+s.n+'</option>'}).join('');
+  sel.addEventListener('change',render);
+
+  function row(label,val,fill,cls){
+    return '<div class="row"><span>'+label+'</span><span class="val">'+val+'</span><div class="bar"><i class="'+(cls||'')+'" style="width:'+Math.max(0,Math.min(100,fill))+'%"></i></div></div>';
+  }
+  function tag(t,c){return '<span class="tag '+c+'">'+t+'</span>'}
+
+  function render(){
+    var i=+sel.value, s=i<0?agg():SEGS[i], r=calc(s);
+
+    document.getElementById('story').innerHTML=
+      '<b>'+s.n+'.</b> El modelo sube la precisión en los primeros K de '+s.pkb.toFixed(1)+'% a '+s.pkm.toFixed(1)+'% ('+r.lift.toFixed(2)+' veces). '+
+      'Con esa prioridad se contactaron '+n0(s.act)+' cuentas y la conversión pasó de '+pct(r.pc)+' a '+pct(r.pt)+'. '+
+      (r.inc>0?'Son <b>'+n0(r.inc)+' ventas que no habrían ocurrido</b> y <b>'+mxn(r.margin)+' de margen</b>, con un ROI de <b>'+Math.round(r.roi*100)+'%</b>.'
+              :'No hubo ventas adicionales: <b>aquí el modelo no mejora el proceso actual</b> y el costo del programa no se recupera.');
+
+    document.getElementById('p1').innerHTML=
+      row('Cobertura (PyMEs con al menos una arista)',s.cov.toFixed(0)+'%',s.cov,s.cov<70?'bad':'')+
+      row('Entidades resueltas',s.res.toFixed(0)+'%',s.res,s.res<88?'bad':'')+
+      row('Aristas observadas / inferidas',s.obs.toFixed(0)+' / '+(100-s.obs).toFixed(0),s.obs,'')+
+      row('Frescura (mediana en días)',s.fresh.toFixed(0)+' d',100-s.fresh*5,s.fresh>8?'bad':'good')+
+      '<p class="small muted">Mis metas: cobertura de 75% o más, resueltas de 88% o más, frescura de 8 días o menos.</p>';
+
+    var mx=30;
+    document.getElementById('p2').innerHTML=
+      row('Precision@K sin grafo',s.pkb.toFixed(1)+'%',s.pkb/mx*100,'b2')+
+      row('Precision@K con grafo',s.pkm.toFixed(1)+'%',s.pkm/mx*100,'')+
+      '<div class="row"><span>Mejora contra el baseline</span><span class="val">'+r.lift.toFixed(2)+'×</span></div>'+
+      '<div class="row"><span>AUC (baseline → modelo)</span><span class="val">0.71 → 0.78</span></div>'+
+      '<div class="row"><span>Calibración (ECE)</span><span class="val">0.03 '+tag('bien','good')+'</span></div>'+
+      '<div class="row"><span>Drift de features (PSI)</span><span class="val">0.07 '+tag('estable','good')+'</span></div>'+
+      '<p class="small muted">Las barras van de 0 a 30%. K = 10,000 cuentas en offline.</p>';
+
+    var st=[['Universo de PyMEs',s.uni],['Oportunidades detectadas',s.det],['Qualified leads',s.qual],['Contactos activados',s.act],['Conversiones',s.cc+s.tc]];
+    var lmax=Math.log10(sum('uni')),h='';
+    st.forEach(function(x,k){
+      var w=Math.log10(x[1])/lmax*100, rate=k?'<div class="rate">'+pct(x[1]/st[k-1][1])+' del paso anterior</div>':'';
+      h+='<div class="fun"><div class="top"><span style="font-weight:400">'+x[0]+'</span><span>'+n0(x[1])+'</span></div><div class="bar"><i style="width:'+w+'%"></i></div>'+rate+'</div>';
+    });
+    h+='<div class="sub">el piloto, brazo por brazo</div><table class="mini"><thead><tr><th></th><th class="r">Activados</th><th class="r">Ventas</th><th class="r">Tasa</th></tr></thead><tbody>'+
+      '<tr><td>Control</td><td class="r">'+n0(r.arm)+'</td><td class="r">'+n0(s.cc)+'</td><td class="r">'+pct(r.pc)+'</td></tr>'+
+      '<tr><td>Tratamiento</td><td class="r">'+n0(r.arm)+'</td><td class="r">'+n0(s.tc)+'</td><td class="r">'+pct(r.pt)+'</td></tr></tbody></table>';
+    document.getElementById('p3').innerHTML=h;
+
+    var big=Math.max(Math.abs(r.margin),Math.abs(r.cost),Math.abs(r.net),1);
+    document.getElementById('p4').innerHTML=
+      row('Margen incremental (LTV)',mxn(r.margin),Math.abs(r.margin)/big*100,'good')+
+      row('Costo del programa (asignado)',mxn(r.cost),r.cost/big*100,'b2')+
+      row('Neto',mxn(r.net),Math.abs(r.net)/big*100,r.net>=0?'good':'bad')+
+      '<div class="row"><span>ROI neto</span><span class="val">'+Math.round(r.roi*100)+'%</span></div>'+
+      '<div class="row"><span>Payback</span><span class="val">'+(r.payback?r.payback.toFixed(1)+' meses':'no se recupera')+'</span></div>'+
+      '<div class="row"><span>Costo comercial por venta</span><span class="val">'+mxnFull(r.cpcC)+' → '+mxnFull(r.cpcT)+'</span></div>'+
+      '<div class="row"><span>Conexiones útiles a 90 días, por cada 1,000 contactadas</span><span class="val">'+r.kcR.toFixed(1)+' → '+r.ktR.toFixed(1)+'</span></div>'+
+      '<div class="row"><span>Mejora de conversión, IC 95%</span><span class="val">'+(r.d*100).toFixed(1)+' pp ['+(r.lo*100).toFixed(1)+', '+(r.hi*100).toFixed(1)+']</span></div>'+
+      '<div class="row"><span>Significancia</span><span class="val">'+(r.p<0.01?tag('p &lt; 0.01','good'):tag('no significativo','bad'))+'</span></div>'+
+      '<p class="small muted">LTV de margen por cuenta: '+mxnFull(LTV)+'. El costo por venta no incluye el costo fijo de la plataforma. Conexión útil: par de PyMEs sin relación previa que, tras una presentación autorizada por ambas, muestra una relación comercial observada.</p>';
+
+    var a='';
+    if(r.inc<=0||r.lo<=0) a+='<div class="er"><b>Aquí no escalaría.</b> El intervalo de confianza de la mejora incluye el cero en '+s.n+'. Mantendría el proceso actual y buscaría qué señal le falta al grafo.</div>';
+    else a+='<div class="ok"><b>Aquí sí escalaría.</b> La mejora es significativa y el ROI es positivo en '+s.n+'.</div>';
+    if(s.cov<75) a+='<div class="wr"><b>La cobertura es baja ('+s.cov.toFixed(0)+'%).</b> Antes de ampliar el piloto conseguiría más fuentes de aristas.</div>';
+    if(s.fresh>8) a+='<div class="wr"><b>El grafo va atrasado ('+s.fresh.toFixed(0)+' días).</b> Revisaría la ingesta de este segmento.</div>';
+    if(i<0) a+='<div class="wr"><b>Construcción no muestra mejora</b> y tiene la cobertura más baja. La sacaría de la expansión.</div>';
+    document.getElementById('alerts').innerHTML=a;
+  }
+  render();
+})();
+</script>
+
+</body></html>
