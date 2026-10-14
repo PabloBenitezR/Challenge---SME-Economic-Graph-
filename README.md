@@ -2,6 +2,9 @@
 
 Propuesta para el reto de AI Engineering: cómo construir un Economic Graph de PyMEs y cómo demostrar que genera valor incremental.
 
+- Página: https://pablobenitezr.github.io/Challenge---SME-Economic-Graph-/
+- Video de 1 minuto: https://www.youtube.com/watch?v=4qKF3OHP4JM
+
 Autor: Pablo Benítez.
 
 ## Qué es
